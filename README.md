@@ -20,7 +20,7 @@ With an audience of over 1 billion weekly users, apps have the potential to be s
 #### 👉 Links & Resources
 
 - [OpenAI Apps SDK](https://developers.openai.com/apps-sdk/)
-- [Multi-Modal MCP Server/Client](https://github.com/Ashot72/Multi-Modal-MCP-Server-Client)
+- [ChatGPT-SDK-Multimodal-MCP-App](https://github.com/Ashot72/chatgpt-sdk-multimodal-mcp-app)
 - [Vercel Labs Next.js Starter Template](https://github.com/vercel-labs/chatgpt-apps-sdk-nextjs-starter)
 - [Ngrok](https://ngrok.com/)
 
