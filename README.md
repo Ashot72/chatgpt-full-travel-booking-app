@@ -7,7 +7,7 @@ With an audience of over 1 billion weekly users, apps have the potential to be s
 
 #### 🎯 In this video, we’ll explore
 
-- 🌍 How we built a **full Travel Booking app inside ChatGPT**, accessible to over 1 billion weekly users
+- 🌍 How we run a **full Travel Booking app inside ChatGPT**, accessible to over 1 billion weekly users
 - 🏨 How the app connects to the **Booking.com API via RapidAPI** to search destinations and hotels
 - 💳 How we integrated **Stripe Checkout** for secure test-mode payments
 - 🔐 How **OAuth + Google Sign-In** authenticate users directly inside ChatGPT
