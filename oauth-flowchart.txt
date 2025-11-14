@@ -1,0 +1,94 @@
+┌──────────────────────┐
+│ ChatGPT (MCP Client) │
+└──────────┬───────────┘
+           │
+           │ 1. Discover config
+           ▼
+┌───────────────────────────────┐
+│ GET /.well-known/* endpoints  │◀──────────────────────────┐
+│ (protected-resource, auth svc)│                           │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 2. Optional dynamic client registration         │
+           ▼                                                 │
+┌───────────────────────────────┐                           │
+│ POST /oauth/register          │                           │
+│ ← client_id + client_secret   │                           │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 3. Initiate authorization                       │
+           ▼                                                 │
+┌───────────────────────────────┐                           │
+│ Redirect user to /oauth/      │                           │
+│ authorize                     │                           │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 4. Booking app sends user to Google             │
+           ▼                                                 │
+┌────────────────────────────────────────┐                  │
+│  Google Cloud OAuth (your project)     │                  │
+│  https://accounts.google.com/o/oauth...│                  │
+└──────────┬─────────────────────────────┘                  │
+           │                                                 │
+           │ 5. User signs in, approves scopes               │
+           ▼                                                 │
+┌────────────────────────────────────────┐                  │
+│ Google redirects to /oauth/callback    │                  │
+│ ?code=google_code&state=session_info   │                  │
+└──────────┬─────────────────────────────┘                  │
+           │                                                 │
+           │ 6. Booking app handles callback                 │
+           │    • decode state                                │
+           │    • cache google_code with internal_code        │
+           │    • redirect ChatGPT with internal_code         │
+           ▼                                                 │
+┌───────────────────────────────┐                           │
+│ ChatGPT receives internal code│                           │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 7. ChatGPT swaps code for tokens                │
+           ▼                                                 │
+┌───────────────────────────────┐                           │
+│ POST /oauth/token             │                           │
+│   grant_type=authorization_code│                          │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 8. Booking app                                   │
+           │    • looks up internal_code                      │
+           │    • exchanges google_code at Google token API   │
+           │    • normalizes response                         │
+           ▼                                                 │
+┌────────────────────────────────────────┐                  │
+│ Google Cloud token endpoint            │                  │
+│ https://oauth2.googleapis.com/token    │                  │
+└──────────┬─────────────────────────────┘                  │
+           │                                                 │
+           │ 9. Tokens returned                               │
+           ▼                                                 │
+┌───────────────────────────────┐                           │
+│ ChatGPT stores access/refresh │                           │
+│ tokens for future use         │                           │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 10. Protected resource call                     │
+           ▼                                                 │
+┌───────────────────────────────┐                           │
+│ POST /mcp with Authorization  │                           │
+│  Bearer access_token          │                           │
+└──────────┬────────────────────┘                           │
+           │                                                 │
+           │ 11. Booking app validates token                 │
+           ▼                                                 │
+┌────────────────────────────────────────┐                  │
+│ Google tokeninfo                       │                  │
+│ https://oauth2.googleapis.com/tokeninfo│                  │
+└──────────┬─────────────────────────────┘                  │
+           │                                                 │
+           │ 12. On success                                   │
+           │    • set auth context                            │
+           │    • execute MCP tool                            │
+           ▼                                                 │
+┌───────────────────────────────┐
+│ ChatGPT receives tool result  │
+└───────────────────────────────┘
+
